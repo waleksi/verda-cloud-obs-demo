@@ -1,6 +1,7 @@
 grafana:
   plugins:
     - victoriametrics-metrics-datasource 1.0.1
+    - victoriametrics-logs-datasource 0.34.0
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -11,6 +12,11 @@ grafana:
           access: proxy
           url: http://vmsingle.victoriametrics.svc:8428
           isDefault: true
+        - name: VictoriaLogs
+          uid: victorialogs
+          type: victoriametrics-logs-datasource
+          access: proxy
+          url: http://vlsingle.victorialogs.svc:9428
   # Dashboards come from dashboards/*.json in this folder (see templates/dashboards.yaml)
   sidecar:
     dashboards:

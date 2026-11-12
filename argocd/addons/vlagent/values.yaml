@@ -1,0 +1,3 @@
+victoria-logs-collector:
+  remoteWrite:
+    - url: http://vlsingle.victorialogs.svc:9428

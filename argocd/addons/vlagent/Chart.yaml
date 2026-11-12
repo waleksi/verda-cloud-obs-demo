@@ -1,0 +1,7 @@
+apiVersion: v2
+name: vlagent
+version: 0.0.0
+dependencies:
+  - name: victoria-logs-collector
+    version: 0.3.8
+    repository: https://victoriametrics.github.io/helm-charts/

@@ -1,0 +1,5 @@
+victoria-logs-single:
+  server:
+    # Fixed Service name so the collector can point at it:
+    # http://vlsingle.victorialogs.svc:9428
+    fullnameOverride: vlsingle

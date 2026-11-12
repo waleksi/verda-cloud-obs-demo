@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  description: Workload applications
+  sourceRepos:
+    - "*"
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: "*"
+  # Apps may only create namespaced resources, plus Namespaces for CreateNamespace=true
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace

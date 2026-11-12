@@ -1,0 +1,7 @@
+apiVersion: v2
+name: victorialogs
+version: 0.0.0
+dependencies:
+  - name: victoria-logs-single
+    version: 0.13.12
+    repository: https://victoriametrics.github.io/helm-charts/

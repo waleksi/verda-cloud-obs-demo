@@ -10,11 +10,12 @@ spec:
         revision: main
         directories:
           - path: argocd/addons/*
+          - path: argocd/observability/*
   template:
     metadata:
       name: '{{path.basename}}'
     spec:
-      project: default
+      project: '{{path[1]}}'
       source:
         repoURL: https://github.com/waleksi/verda-cloud-obs-demo.git
         targetRevision: main
