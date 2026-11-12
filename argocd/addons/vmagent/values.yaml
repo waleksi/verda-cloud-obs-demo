@@ -1,0 +1,3 @@
+victoria-metrics-agent:
+  remoteWrite:
+    - url: http://vmsingle.victoriametrics.svc:8428/api/v1/write

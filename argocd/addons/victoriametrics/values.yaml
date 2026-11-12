@@ -1,0 +1,5 @@
+victoria-metrics-single:
+  server:
+    # Fixed Service name so vmagent can point at it:
+    # http://vmsingle.victoriametrics.svc:8428
+    fullnameOverride: vmsingle
