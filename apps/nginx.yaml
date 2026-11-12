@@ -4,7 +4,7 @@ metadata:
   name: nginx
   namespace: argocd
 spec:
-  project: default
+  project: apps
   source:
     repoURL: https://github.com/waleksi/verda-cloud-obs-demo.git
     targetRevision: main
