@@ -1,1 +1,6 @@
-kube-state-metrics: {}
+kube-state-metrics:
+  service:
+    annotations:
+      # vmagent's default "kubernetes-service-endpoints" job only keeps targets whose
+      # prometheus.io/port annotation equals the container port, so it must be set.
+      prometheus.io/port: "8080"
