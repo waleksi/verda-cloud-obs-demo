@@ -1,0 +1,4 @@
+metrics-server:
+  args:
+    # minikube's kubelet uses a self-signed certificate
+    - --kubelet-insecure-tls
