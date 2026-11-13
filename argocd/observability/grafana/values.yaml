@@ -2,6 +2,7 @@ grafana:
   plugins:
     - victoriametrics-metrics-datasource 1.0.1
     - victoriametrics-logs-datasource 0.34.0
+    - yesoreyeram-infinity-datasource 4.1.6
   datasources:
     datasources.yaml:
       apiVersion: 1
