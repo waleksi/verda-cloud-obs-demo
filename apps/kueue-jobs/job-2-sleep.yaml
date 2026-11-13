@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep-2
+  namespace: default
+  labels:
+    kueue.x-k8s.io/queue-name: user-queue
+spec:
+  suspend: true
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: sleep
+          image: busybox:1.37
+          command: ["sleep", "600"]
+          resources:
+            requests:
+              cpu: "1500m"
+            limits:
+              cpu: "1500m"
