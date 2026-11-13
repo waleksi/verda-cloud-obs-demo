@@ -59,7 +59,7 @@ one runs and the other waits. In Grafana, open **Dashboards → Batch Operations
 1. **At the start:** the status panel shows 1 admitted and 1 pending. *Running and pending jobs* lists both,
    and the quota gauge reads 50% or 75%, depending on which job was admitted first.
 2. **After about 2 minutes:** the alert *Kueue job pending for more than 2 minutes* fires. See it in
-   *Pending alert status* on the dashboard, or under **Alerting → Alert rules** in the `alerts` folder.
+   *Pending and firing alerts* on the dashboard, or under **Alerting → Alert rules** in the `alerts` folder.
 3. **After 10 minutes:** the first job finishes and the waiting one is admitted. The alert resolves, and
    *Admission wait time* shows how long it waited.
 
