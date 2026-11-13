@@ -102,7 +102,7 @@
     {
       "id": 3,
       "type": "stat",
-      "title": "Kueue Status: Admitted vs Pending",
+      "title": "Kueue Status",
       "description": "Workloads currently admitted (running within quota) vs waiting in the queue.",
       "gridPos": {
         "h": 8,
