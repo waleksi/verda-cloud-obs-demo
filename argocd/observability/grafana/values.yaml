@@ -92,3 +92,42 @@ grafana:
               annotations:
                 summary: A Kueue workload has been Pending for more than 2 minutes
                 description: At least one workload has been waiting in a Kueue queue without being admitted (for example because the ClusterQueue CPU quota is used up). See the Batch Operations dashboard.
+            - uid: kueue-batch-job-failed
+              title: Batch job failed
+              condition: C
+              data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: victoriametrics
+                  model:
+                    refId: A
+                    expr: kube_job_status_failed
+                    instant: true
+                    range: false
+                - refId: B
+                  datasourceUid: __expr__
+                  model:
+                    refId: B
+                    type: reduce
+                    expression: A
+                    reducer: last
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    refId: C
+                    type: threshold
+                    expression: B
+                    conditions:
+                      - evaluator:
+                          type: gt
+                          params: [0]
+              for: 0s
+              noDataState: OK
+              execErrState: Error
+              labels:
+                severity: critical
+              annotations:
+                summary: A batch job has failed
+                description: Job {{`{{ $labels.job_name }}`}} in namespace {{`{{ $labels.exported_namespace }}`}} has failed pods. Check its logs and `kubectl describe job`.
