@@ -344,7 +344,7 @@
           "parser": "backend",
           "format": "table",
           "url": "/apis/kueue.x-k8s.io/v1beta2/workloads",
-          "root_selector": "$append([], items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\",\n  \"seconds\": $round(($millis() - $toMillis(($exists(status.admission) ? (status.conditions[type=\"Admitted\" and status=\"True\"].lastTransitionTime)[0] : metadata.creationTimestamp))) / 1000)\n})",
+          "root_selector": "$append([], items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\",\n  \"seconds\": $round(($millis() - $toMillis(($exists(status.admission) ? (status.conditions[type=\"Admitted\" and status=\"True\"].lastTransitionTime)[0] : metadata.creationTimestamp))) / 1000),\n  \"reason\": $exists(status.admission) ? \"\" : status.conditions[type=\"QuotaReserved\" and status=\"False\"].message\n})",
           "columns": [
             {
               "selector": "job",
@@ -370,6 +370,11 @@
               "selector": "seconds",
               "text": "Time in state",
               "type": "number"
+            },
+            {
+              "selector": "reason",
+              "text": "Reason",
+              "type": "string"
             }
           ],
           "url_options": {
