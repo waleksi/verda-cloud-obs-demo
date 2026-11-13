@@ -183,6 +183,96 @@
       }
     },
     {
+      "id": 5,
+      "type": "table",
+      "title": "Running and pending jobs (live from the Kubernetes API)",
+      "description": "Kueue Workloads that have not finished, read from /apis/kueue.x-k8s.io/v1beta2/workloads. Running = admitted by Kueue, Pending = waiting for quota.",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "kubernetes-api"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "/apis/kueue.x-k8s.io/v1beta2/workloads",
+          "root_selector": "items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\"\n}",
+          "columns": [
+            {
+              "selector": "job",
+              "text": "Job",
+              "type": "string"
+            },
+            {
+              "selector": "namespace",
+              "text": "Namespace",
+              "type": "string"
+            },
+            {
+              "selector": "queue",
+              "text": "Queue",
+              "type": "string"
+            },
+            {
+              "selector": "state",
+              "text": "State",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "State"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Running": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "Pending": {
+                        "color": "orange",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      }
+    },
+    {
       "id": 4,
       "type": "logs",
       "title": "Log Explorer: kueue-controller-manager",
@@ -191,7 +281,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "datasource": {
         "type": "victoriametrics-logs-datasource",

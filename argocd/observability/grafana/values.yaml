@@ -18,6 +18,26 @@ grafana:
           type: victoriametrics-logs-datasource
           access: proxy
           url: http://vlsingle.victorialogs.svc:9428
+        # For live Kueue workloads
+        - name: Kubernetes API
+          uid: kubernetes-api
+          type: yesoreyeram-infinity-datasource
+          access: proxy
+          url: https://kubernetes.default.svc
+          jsonData:
+            auth_method: bearerToken
+            allowedHosts:
+              - https://kubernetes.default.svc
+            tlsAuthWithCACert: true
+          secureJsonData:
+            bearerToken: $__env{K8S_API_TOKEN}
+            tlsCACert: $__file{/var/run/secrets/kubernetes.io/serviceaccount/ca.crt}
+  # Token for the Kubernetes API datasource
+  envValueFrom:
+    K8S_API_TOKEN:
+      secretKeyRef:
+        name: grafana-k8s-api-token
+        key: token
   # Dashboards come from dashboards/*.json in this folder (see templates/dashboards.yaml)
   sidecar:
     dashboards:

@@ -1,0 +1,31 @@
+# Lets Grafana's Infinity datasource read Kueue Workloads from the Kubernetes API
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: grafana-read-kueue-workloads
+rules:
+  - apiGroups: ["kueue.x-k8s.io"]
+    resources: ["workloads"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grafana-read-kueue-workloads
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: grafana-read-kueue-workloads
+subjects:
+  - kind: ServiceAccount
+    name: grafana
+    namespace: {{ .Release.Namespace }}
+---
+# Long-lived token for the grafana service account
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-k8s-api-token
+  annotations:
+    kubernetes.io/service-account.name: grafana
+type: kubernetes.io/service-account-token
