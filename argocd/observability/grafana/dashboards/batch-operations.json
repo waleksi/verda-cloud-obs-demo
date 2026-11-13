@@ -205,7 +205,7 @@
           "parser": "backend",
           "format": "table",
           "url": "/apis/kueue.x-k8s.io/v1beta2/workloads",
-          "root_selector": "items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\"\n}",
+          "root_selector": "[items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\"\n}]",
           "columns": [
             {
               "selector": "job",
