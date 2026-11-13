@@ -325,7 +325,7 @@
       "id": 5,
       "type": "table",
       "title": "Running and pending jobs",
-      "description": "Kueue Workloads that have not finished. Running = admitted by Kueue, Pending = waiting for quota.",
+      "description": "Kueue Workloads that have not finished, read from /apis/kueue.x-k8s.io/v1beta2/workloads. Running = admitted by Kueue (time since admission), Pending = waiting for quota (time since created).",
       "gridPos": {
         "h": 8,
         "w": 16,
@@ -344,7 +344,7 @@
           "parser": "backend",
           "format": "table",
           "url": "/apis/kueue.x-k8s.io/v1beta2/workloads",
-          "root_selector": "$append([], items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\"\n})",
+          "root_selector": "$append([], items[$not($exists(status.conditions[type=\"Finished\" and status=\"True\"]))].{\n  \"job\": metadata.ownerReferences[0].name,\n  \"namespace\": metadata.namespace,\n  \"queue\": spec.queueName,\n  \"state\": $exists(status.admission) ? \"Running\" : \"Pending\",\n  \"seconds\": $round(($millis() - $toMillis(($exists(status.admission) ? (status.conditions[type=\"Admitted\" and status=\"True\"].lastTransitionTime)[0] : metadata.creationTimestamp))) / 1000)\n})",
           "columns": [
             {
               "selector": "job",
@@ -365,6 +365,11 @@
               "selector": "state",
               "text": "State",
               "type": "string"
+            },
+            {
+              "selector": "seconds",
+              "text": "Time in state",
+              "type": "number"
             }
           ],
           "url_options": {
@@ -408,6 +413,18 @@
                     }
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time in state"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dtdurations"
               }
             ]
           }
