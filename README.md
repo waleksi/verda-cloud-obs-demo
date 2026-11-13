@@ -173,8 +173,7 @@ named after the folder and installed into a namespace of the same name.
 
 ## Known limitations
 
-- One minikube node, no high availability. Metrics and logs are lost when the VM is recreated.
+- Metrics and logs are lost when the VM is recreated.
 - Grafana has no persistent storage. Its admin password is regenerated on each Argo CD sync (the chart
   can't look up its existing Secret under Argo CD), so read it from the Secret each time.
-- Docker comes from Ubuntu's `docker.io` package and is not version-pinned.
 - The VM needs outbound internet access (GitHub, Helm repos, grafana.com plugins).
