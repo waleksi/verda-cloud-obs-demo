@@ -438,8 +438,8 @@
     {
       "id": 8,
       "type": "alertlist",
-      "title": "Pending alert status",
-      "description": "State of the alert that fires when a workload stays Pending for more than 2 minutes.",
+      "title": "Pending and firing alerts",
+      "description": "Alerts that are firing now, or whose condition is true but still waiting out its \"for\" period (alert state Pending, not to be confused with a Kueue workload being pending). Empty when everything is healthy.",
       "gridPos": {
         "h": 8,
         "w": 8,
@@ -453,16 +453,16 @@
         "maxItems": 10,
         "sortOrder": 1,
         "dashboardAlerts": false,
-        "alertName": "Kueue job pending",
+        "alertName": "",
         "alertInstanceLabelFilter": "",
         "datasource": "default",
-        "showInstances": false,
+        "showInstances": true,
         "stateFilter": {
           "firing": true,
           "pending": true,
-          "noData": true,
-          "normal": true,
-          "error": true
+          "noData": false,
+          "normal": false,
+          "error": false
         },
         "folder": null
       }
