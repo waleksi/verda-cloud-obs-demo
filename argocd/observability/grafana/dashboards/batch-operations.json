@@ -274,7 +274,7 @@
       "id": 7,
       "type": "timeseries",
       "title": "Admission wait time",
-      "description": "How long workloads waited in the queue before Kueue admitted them (p50 and p95, estimated from the wait-time histogram).",
+      "description": "How long workloads waited in the queue before Kueue admitted them.",
       "gridPos": {
         "h": 8,
         "w": 12,
