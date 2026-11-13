@@ -227,7 +227,14 @@
               "text": "State",
               "type": "string"
             }
-          ]
+          ],
+          "url_options": {
+            "method": "GET",
+            "data": "",
+            "headers": [],
+            "params": []
+          },
+          "filters": []
         }
       ],
       "fieldConfig": {
