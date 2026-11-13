@@ -1,1 +1,3 @@
-kueue: {}
+kueue:
+  # Renders a ServiceMonitor, which victoria-metrics-operator converts into a VMServiceScrape
+  enablePrometheus: true

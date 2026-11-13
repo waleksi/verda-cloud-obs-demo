@@ -1,0 +1,11 @@
+apiVersion: v2
+name: victoria-metrics-operator
+version: 0.0.0
+dependencies:
+  - name: victoria-metrics-operator
+    version: 0.68.2
+    repository: https://victoriametrics.github.io/helm-charts/
+  # ServiceMonitor/PodMonitor CRDs; the operator converts these objects into VM scrape objects
+  - name: prometheus-operator-crds
+    version: 33.0.2
+    repository: https://prometheus-community.github.io/helm-charts

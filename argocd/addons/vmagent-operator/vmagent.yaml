@@ -1,0 +1,12 @@
+# Operator-managed vmagent that scrapes every VMServiceScrape/VMPodScrape in the cluster,
+# including the ones the operator converts from ServiceMonitors (e.g. Kueue's).
+# The annotation-based vmagent in addons/vmagent keeps handling the default Kubernetes jobs.
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: operator
+spec:
+  selectAllByDefault: true
+  scrapeInterval: 30s
+  remoteWrite:
+    - url: http://vmsingle.victoriametrics.svc:8428/api/v1/write
