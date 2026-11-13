@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: sleep-1
+  name: job-1
   namespace: default
   labels:
     kueue.x-k8s.io/queue-name: user-queue
