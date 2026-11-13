@@ -82,6 +82,15 @@ The Jobs run once. To queue them again, delete them and Argo CD recreates them f
 sudo -iu kube kubectl -n default delete job job-1 job-2
 ```
 
+## Tear it down
+
+```bash
+cd tofu
+tofu destroy
+```
+
+This deletes the VM, the SSH key and the startup script in Verda.
+
 ## How it works
 
 ```
