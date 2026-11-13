@@ -50,7 +50,7 @@ grafana:
       groups:
         - orgId: 1
           name: batch-operations
-          folder: Batch Operations
+          folder: alerts
           interval: 1m
           rules:
             - uid: kueue-job-pending-2m
