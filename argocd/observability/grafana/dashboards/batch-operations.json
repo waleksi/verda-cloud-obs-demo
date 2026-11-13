@@ -451,12 +451,12 @@
       }
     },
     {
-      "id": 9,
-      "type": "timeseries",
-      "title": "Log volume by level (kueue-controller-manager)",
-      "description": "Number of controller log lines per level. Level(-N) debug variants are folded into debug.",
+      "id": 4,
+      "type": "logs",
+      "title": "Log Explorer: kueue-controller-manager",
+      "description": "Logs from the kueue-controller-manager pod (VictoriaLogs).",
       "gridPos": {
-        "h": 6,
+        "h": 14,
         "w": 24,
         "x": 0,
         "y": 24
@@ -468,119 +468,7 @@
       "targets": [
         {
           "refId": "A",
-          "queryType": "statsRange",
-          "step": "1m",
-          "legendFormat": "{{level}}",
-          "expr": "{kubernetes.pod_namespace=\"kueue\",kubernetes.container_name=\"manager\"} | replace_regexp (\"^Level\\\\(-?[0-9]+\\\\)$\", \"debug\") at level | replace (\"INFO\", \"info\") at level | stats by (level) count() logs"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "none",
-          "decimals": 0,
-          "min": 0,
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 80,
-            "lineWidth": 1,
-            "stacking": {
-              "mode": "normal",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "error"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "red"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "warn"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "orange"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "info"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "blue"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "debug"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "gray"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "multi"
-        }
-      }
-    },
-    {
-      "id": 4,
-      "type": "logs",
-      "title": "Log Explorer: kueue-controller-manager",
-      "description": "Logs from the kueue-controller-manager pod (VictoriaLogs).",
-      "gridPos": {
-        "h": 14,
-        "w": 24,
-        "x": 0,
-        "y": 30
-      },
-      "datasource": {
-        "type": "victoriametrics-logs-datasource",
-        "uid": "victorialogs"
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "{kubernetes.pod_namespace=\"kueue\",kubernetes.container_name=\"manager\"}",
+          "expr": "{kubernetes.pod_namespace=\"kueue\",kubernetes.container_name=\"manager\"} level:~`^(${level:pipe})$`",
           "queryType": "instant",
           "maxLines": 200
         }
@@ -593,5 +481,31 @@
         "dedupStrategy": "none"
       }
     }
-  ]
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "level",
+        "label": "Log level",
+        "type": "custom",
+        "description": "Filters the Log Explorer. Each choice also matches its variants (INFO, Level(-N) debug).",
+        "query": "error : error, warn : warn|warning|WARN, info : info|INFO, debug : debug|Level.-[0-9]+.",
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "options": [],
+        "hide": 0,
+        "skipUrlSync": false
+      }
+    ]
+  }
 }
