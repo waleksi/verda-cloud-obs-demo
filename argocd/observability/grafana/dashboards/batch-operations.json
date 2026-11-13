@@ -183,15 +183,154 @@
       }
     },
     {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Workloads over time",
+      "description": "Admitted (running within quota) and pending (waiting) workloads across all queues.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "datasource": {
+        "type": "victoriametrics-metrics-datasource",
+        "uid": "victoriametrics"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kueue_admitted_active_workloads) or vector(0)",
+          "legendFormat": "Admitted"
+        },
+        {
+          "refId": "B",
+          "expr": "sum(kueue_pending_workloads) or vector(0)",
+          "legendFormat": "Pending"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "min": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter",
+            "fillOpacity": 30,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Admitted"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pending"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Admission wait time",
+      "description": "How long workloads waited in the queue before Kueue admitted them (p50 and p95, estimated from the wait-time histogram).",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "datasource": {
+        "type": "victoriametrics-metrics-datasource",
+        "uid": "victoriametrics"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(kueue_admission_wait_time_seconds_bucket[5m])))",
+          "legendFormat": "p50"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(kueue_admission_wait_time_seconds_bucket[5m])))",
+          "legendFormat": "p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
       "id": 5,
       "type": "table",
       "title": "Running and pending jobs",
-      "description": "Kueue Workloads that have not finished, read from /apis/kueue.x-k8s.io/v1beta2/workloads. Running = admitted by Kueue, Pending = waiting for quota.",
+      "description": "Kueue Workloads that have not finished. Running = admitted by Kueue, Pending = waiting for quota.",
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 16,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "datasource": {
         "type": "yesoreyeram-infinity-datasource",
@@ -280,6 +419,150 @@
       }
     },
     {
+      "id": 8,
+      "type": "alertlist",
+      "title": "Pending alert status",
+      "description": "State of the alert that fires when a workload stays Pending for more than 2 minutes.",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "options": {
+        "viewMode": "list",
+        "groupMode": "default",
+        "groupBy": [],
+        "maxItems": 10,
+        "sortOrder": 1,
+        "dashboardAlerts": false,
+        "alertName": "Kueue job pending",
+        "alertInstanceLabelFilter": "",
+        "datasource": "default",
+        "showInstances": false,
+        "stateFilter": {
+          "firing": true,
+          "pending": true,
+          "noData": true,
+          "normal": true,
+          "error": true
+        },
+        "folder": null
+      }
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Log volume by level (kueue-controller-manager)",
+      "description": "Number of controller log lines per level. Level(-N) debug variants are folded into debug.",
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "statsRange",
+          "step": "1m",
+          "legendFormat": "{{level}}",
+          "expr": "{kubernetes.pod_namespace=\"kueue\",kubernetes.container_name=\"manager\"} | replace_regexp (\"^Level\\\\(-?[0-9]+\\\\)$\", \"debug\") at level | replace (\"INFO\", \"info\") at level | stats by (level) count() logs"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "warn"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "info"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "debug"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "gray"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
       "id": 4,
       "type": "logs",
       "title": "Log Explorer: kueue-controller-manager",
@@ -288,7 +571,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 30
       },
       "datasource": {
         "type": "victoriametrics-logs-datasource",
