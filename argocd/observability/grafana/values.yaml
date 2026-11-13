@@ -43,3 +43,52 @@ grafana:
     dashboards:
       enabled: true
       label: grafana_dashboard
+  # Provisioned alert rules
+  alerting:
+    rules.yaml:
+      apiVersion: 1
+      groups:
+        - orgId: 1
+          name: batch-operations
+          folder: Batch Operations
+          interval: 1m
+          rules:
+            - uid: kueue-job-pending-2m
+              title: Kueue job pending for more than 2 minutes
+              condition: C
+              data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: victoriametrics
+                  model:
+                    refId: A
+                    expr: sum(kueue_pending_workloads) or vector(0)
+                    instant: true
+                    range: false
+                - refId: B
+                  datasourceUid: __expr__
+                  model:
+                    refId: B
+                    type: reduce
+                    expression: A
+                    reducer: last
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    refId: C
+                    type: threshold
+                    expression: B
+                    conditions:
+                      - evaluator:
+                          type: gt
+                          params: [0]
+              for: 2m
+              noDataState: OK
+              execErrState: Error
+              labels:
+                severity: warning
+              annotations:
+                summary: A Kueue workload has been Pending for more than 2 minutes
+                description: At least one workload has been waiting in a Kueue queue without being admitted (for example because the ClusterQueue CPU quota is used up). See the Batch Operations dashboard.
