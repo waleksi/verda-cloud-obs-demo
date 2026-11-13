@@ -1,0 +1,12 @@
+# VMagent operator used to scrape the converted servicemonitors
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  selectAllByDefault: true
+  scrapeInterval: 30s
+  remoteWrite:
+    - url: http://vmsingle.victoriametrics.svc:8428/api/v1/write
