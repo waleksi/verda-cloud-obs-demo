@@ -455,7 +455,7 @@
         "dashboardAlerts": false,
         "alertName": "",
         "alertInstanceLabelFilter": "",
-        "datasource": "default",
+        "datasource": "-- Grafana --",
         "showInstances": true,
         "stateFilter": {
           "firing": true,
